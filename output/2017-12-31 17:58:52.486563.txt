@@ -1,0 +1,25 @@
+0 Frustrated pose 7.jpg
+1 Sad pose 6.jpg
+2 Baby 5.jpg
+3 Fireworks 1.jpg
+4 Miserable pose 5.jpg
+5 Yarn 1.jpg
+6 War 6.jpg
+7 Explosion 5.jpg
+8 Rainbow 1.jpg
+9 Tornado 1.jpg
+10 Toilet 4.jpg
+11 Bored pose 4.jpg
+12 Skinhead 1.jpg
+13 Dead bodies 1.jpg
+14 Rocks 6.jpg
+15 Cotton swabs 3.jpg
+16 Wall 2.jpg
+17 Dog 26.jpg
+18 Yarn 3.jpg
+19 Sidewalk 6.jpg
+20 Garbage dump 2.jpg
+21 Depressed pose 4.jpg
+22 Mother 1.jpg
+23 Grass 3.jpg
+24 Dog 6.jpg
