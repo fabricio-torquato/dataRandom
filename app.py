@@ -22,7 +22,9 @@ class App(QWidget):
         self.title = 'Data Random'
         self.imageNumber = 0
         self.timer = None
+        self.imageClassification = []
         self.visible = False
+        self.clicked = False
         self.files = self.getFiles()
         self.initUI()
 
@@ -69,17 +71,69 @@ class App(QWidget):
         self.pybutton.resize(50, 32)
         self.pybutton.move(50, 50)
 
+        self.pybuttonPositive = QPushButton('Positivo', self)
+        self.pybuttonPositive.resize(50, 32)
+        self.pybuttonPositive.move(50, 50)
+        self.pybuttonPositive.setEnabled(False)
+
+        self.pybuttonNegative = QPushButton('Negativo', self)
+        self.pybuttonNegative.resize(50, 32)
+        self.pybuttonNegative.move(50, 50)
+        self.pybuttonNegative.setEnabled(False)
+
+        self.pybuttonNeutral = QPushButton('Neutro', self)
+        self.pybuttonNeutral.resize(50, 32)
+        self.pybuttonNeutral.move(50, 50)
+        self.pybuttonNeutral.setEnabled(False)
+
         controlLayout = QHBoxLayout()
         controlLayout.setContentsMargins(0, 0, 0, 0)
         controlLayout.addWidget(self.pybutton)
         controlLayout.addWidget(self.positionSlider)
+        controlLayout.addWidget(self.pybuttonNegative)
+        controlLayout.addWidget(self.pybuttonNeutral)
+        controlLayout.addWidget(self.pybuttonPositive)
 
         self.groupBox.setLayout(controlLayout)
 
         return self.groupBox
 
+    def keyPressEvent(self, eventQKeyEvent):
+        if(self.timer and self.visible == False):
+            key = eventQKeyEvent.key()
+            if key == Qt.Key_1:
+                self.pybuttonPositive.setStyleSheet(
+                    "background-color:rgb(53,53,53)")
+                self.pybuttonNegative.setStyleSheet("background-color: green")
+                self.pybuttonNeutral.setStyleSheet(
+                    "background-color:rgb(53,53,53)")
+                if 0 <= self.imageNumber < len(self.imageClassification):
+                    self.imageClassification[self.imageNumber] = 'Negative'
+                else:
+                    self.imageClassification.append('Negative')
+            elif key == Qt.Key_2:
+                self.pybuttonPositive.setStyleSheet(
+                    "background-color:rgb(53,53,53)")
+                self.pybuttonNegative.setStyleSheet(
+                    "background-color:rgb(53,53,53)")
+                self.pybuttonNeutral.setStyleSheet("background-color: green")
+                if 0 <= self.imageNumber < len(self.imageClassification):
+                    self.imageClassification[self.imageNumber] = 'Neutral'
+                else:
+                    self.imageClassification.append('Neutral')
+            elif key == Qt.Key_3:
+                self.pybuttonPositive.setStyleSheet("background-color: green")
+                self.pybuttonNegative.setStyleSheet(
+                    "background-color:rgb(53,53,53)")
+                self.pybuttonNeutral.setStyleSheet(
+                    "background-color:rgb(53,53,53)")
+                if 0 <= self.imageNumber < len(self.imageClassification):
+                    self.imageClassification[self.imageNumber] = 'Positive'
+                else:
+                    self.imageClassification.append('Positive')
+
     def getFiles(self):
-        onlyfiles = ["data/" + f for f in listdir("data/")]
+        onlyfiles = ["data/" + f for f in listdir("data/") if ".jpg" in f]
         return onlyfiles
 
     def nextImage(self):
@@ -109,6 +163,7 @@ class App(QWidget):
     def play(self):
         self.randomList()
         self.imageNumber = 0
+        self.imageClassification = []
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.nextImage)
         self.timer.start(5000)
@@ -120,18 +175,32 @@ class App(QWidget):
         self.timer = None
         self.imageNumber = 0
         self.visible = True
+        self.saveImageClassification(self.imageClassification)
         self.showBlackView(self.imageNumber)
         self.pybutton.setText(" Iniciar")
         self.pybutton.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
 
+    def saveImageClassification(self, arrayFile):
+        file = open("output/" + str(datetime.now()) +
+                    " - ImageClassification.txt", "w")
+        for (index, value) in enumerate(arrayFile):
+            file.write(str(index) + " " + value + "\n")
+        file.close()
+
     def randomList(self):
         self.files = random.sample(self.files, len(self.files))
-        file = open("output/" + str(datetime.now()) + ".txt", "w")
+        file = open("output/" + str(datetime.now()) + " - RandomList.txt", "w")
         for (index, value) in enumerate(self.files):
             file.write(str(index) + " " + value.replace("data/", "") + "\n")
         file.close()
 
     def showImage(self, imageNumber):
+        self.pybuttonPositive.setStyleSheet(
+            "background-color:rgb(53,53,53)")
+        self.pybuttonNegative.setStyleSheet(
+            "background-color:rgb(53,53,53)")
+        self.pybuttonNeutral.setStyleSheet(
+            "background-color:rgb(53,53,53)")
         QSound.play("public/beep.wav")
         self.setPosition(imageNumber)
         self.groupBox.setTitle(
